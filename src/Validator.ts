@@ -34,6 +34,8 @@ export default class Validator {
 	 * (Against the shape graph set in the constructor).
 	 *
 	 * @param data The linked data graph to validate.
+	 *
+	 * @return The validation report.
 	 */
 	public validate( data: Graph ): ValidationReport {
 		const graph = data[ "@graph" ];
