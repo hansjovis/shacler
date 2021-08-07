@@ -1,7 +1,7 @@
 import { IPropertyShape, PropertyShape } from "./PropertyShape";
 import ValidationResult from "../ValidationReport/ValidationResult";
 import ConstraintRegistry from "../ConstraintComponents/ConstraintRegistry";
-import { flatten } from "lodash";
+import { flatMap } from "lodash";
 
 export interface INodeShape {
 	property: IPropertyShape[];
@@ -22,7 +22,6 @@ export class NodeShape {
 	}
 
 	public check( node: any, availableConstraints: ConstraintRegistry ): ValidationResult[] {
-		const results = this.property.map( shape => shape.check( node, availableConstraints ) );
-		return flatten( results );
+		return flatMap( this.property, shape => shape.check( node, availableConstraints ) );
 	}
 }

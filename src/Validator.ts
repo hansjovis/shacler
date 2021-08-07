@@ -4,7 +4,7 @@ import { IShapeGraph, ShapeGraph } from "./model/Shapes/ShapeGraph";
 import ValidationResult from "./model/ValidationReport/ValidationResult";
 import ConstraintRegistry from "./model/ConstraintComponents/ConstraintRegistry";
 
-import { flatten } from "lodash";
+import { flatMap } from "lodash";
 
 /**
  * Used to validate a linked data graph using a SHACL shape graph.
@@ -46,21 +46,22 @@ export default class Validator {
 	public validate( data: Graph ): ValidationReport {
 		const graph = data[ "@graph" ];
 
-		const results = graph.map( node => this.checkNode( node ) );
+		const results = flatMap( graph, ( node: any ) => this.checkNode( node ) );
 
 		return {
 			conforms: results.length === 0,
-			result: flatten( results ),
+			result: results,
 		};
 	}
 
 	public checkNode( node: any ): ValidationResult[] {
 		const nodeShapes = this.shapes.graph;
 
-		const results = nodeShapes
-			.filter( shape => shape.isApplicable( node ) )
-			.map( shape => shape.check( node, this.availableConstraints ) );
+		const applicableNodeShapes = nodeShapes.filter( shape => shape.isApplicable( node ) );
 
-		return flatten( results );
+		return flatMap(
+			applicableNodeShapes,
+			shape => shape.check( node, this.availableConstraints )
+		);
 	}
 }
