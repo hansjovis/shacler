@@ -1,12 +1,18 @@
 import Validator from "../src/Validator";
 import { IShapeGraph } from "../src/model/Shapes/ShapeGraph";
+import ConstraintRegistry from "../src/model/ConstraintComponents/ConstraintRegistry";
+import MinCountConstraintComponent from "../src/model/ConstraintComponents/MinCountConstraintComponent";
 
 describe( 'Validator', function () {
 	it( "can create a new Validator", () => {
 		const shapes = {
 			"@graph": [],
 		};
-		const validator = new Validator( shapes );
+
+		const availableConstraints = new ConstraintRegistry();
+		availableConstraints.register( "minCount", new MinCountConstraintComponent() );
+
+		const validator = new Validator( shapes, availableConstraints );
 	} );
 
 	describe( "validate method", () => {
@@ -15,7 +21,10 @@ describe( 'Validator', function () {
 				"@graph": [],
 			};
 
-			const validator = new Validator( shapes );
+			const availableConstraints = new ConstraintRegistry();
+			availableConstraints.register( "minCount", new MinCountConstraintComponent() );
+
+			const validator = new Validator( shapes, availableConstraints );
 
 			const data = {
 				"@graph": []
@@ -43,7 +52,10 @@ describe( 'Validator', function () {
 				],
 			};
 
-			const validator = new Validator( shapes );
+			const availableConstraints = new ConstraintRegistry();
+			availableConstraints.register( "minCount", new MinCountConstraintComponent() );
+
+			const validator = new Validator( shapes, availableConstraints );
 
 			const data = {
 				"@context": "https://schema.org/",

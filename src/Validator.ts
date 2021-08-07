@@ -3,11 +3,7 @@ import ValidationReport from "./model/ValidationReport/ValidationReport";
 import { IShapeGraph, ShapeGraph } from "./model/Shapes/ShapeGraph";
 import ValidationResult from "./model/ValidationReport/ValidationResult";
 import { PropertyShape } from "./model/Shapes/PropertyShape";
-
-import MinCountConstraintComponent from "./model/ConstraintComponents/MinCountConstraintComponent";
 import ConstraintRegistry from "./model/ConstraintComponents/ConstraintRegistry";
-
-ConstraintRegistry.register( "minCount", new MinCountConstraintComponent() );
 
 /**
  * Used to validate a linked data graph using a SHACL shape graph.
@@ -21,12 +17,21 @@ export default class Validator {
 	private readonly shapes: ShapeGraph;
 
 	/**
+	 * The registry of available constraint components.
+	 *
+	 * @private
+	 */
+	private readonly availableConstraints: ConstraintRegistry;
+
+	/**
 	 * Creates a new SHACL validator.
 	 *
-	 * @param shapes The shape graph to validate against.
+	 * @param shapes               The shape graph to validate against.
+	 * @param availableConstraints The registry of available constraint components.
 	 */
-	constructor( shapes: IShapeGraph ) {
+	constructor( shapes: IShapeGraph, availableConstraints: ConstraintRegistry ) {
 		this.shapes = new ShapeGraph( shapes );
+		this.availableConstraints = availableConstraints;
 	}
 
 	/**
@@ -49,7 +54,7 @@ export default class Validator {
 					const nodeResults: ValidationResult[] = [];
 					nodeShape.property.forEach(
 						( propertyShape: PropertyShape ) => {
-							nodeResults.push( ... propertyShape.check( node ) );
+							nodeResults.push( ... propertyShape.check( node, this.availableConstraints ) );
 						}
 					);
 					results.push( ...nodeResults );

@@ -24,11 +24,11 @@ export class PropertyShape {
 		delete this.constraints.severity;
 	}
 
-	public check( node: any ): ValidationResult[] {
+	public check( node: any, availableConstraints: ConstraintRegistry ): ValidationResult[] {
 		const results: ValidationResult[] = [];
 		Object.keys( this.constraints ).forEach(
 			key => {
-				const result = this.checkConstraint( key, node );
+				const result = this.checkConstraint( key, node, availableConstraints );
 				if ( result ) {
 					results.push( result );
 				}
@@ -37,8 +37,8 @@ export class PropertyShape {
 		return results;
 	}
 
-	private checkConstraint( key: string, node: any ) {
-		const constraint = ConstraintRegistry.get( key );
+	private checkConstraint( key: string, node: any, availableConstraints: ConstraintRegistry ) {
+		const constraint = availableConstraints.get( key );
 
 		if ( constraint && ! constraint.isValid( node, this.shape )  ) {
 			return this.generateResult( node, constraint );
