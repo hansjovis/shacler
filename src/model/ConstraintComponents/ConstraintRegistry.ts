@@ -1,16 +1,20 @@
 import ConstraintComponent from "./ConstraintComponent";
 
 export default class ConstraintRegistry {
-	private static registry: Record<string, ConstraintComponent>;
+	private registry: Record<string, ConstraintComponent>;
 
-	static register( parameter: string, constraintComponent: ConstraintComponent ) {
+	constructor() {
+		this.registry = {};
+	}
+
+	register( parameter: string, constraintComponent: ConstraintComponent ) {
 		if ( ! this.registry ) {
 			this.registry = {};
 		}
 		this.registry[ parameter ] = constraintComponent;
 	}
 
-	static get( parameter: string ): ConstraintComponent | undefined {
+	get( parameter: string ): ConstraintComponent | undefined {
 		if ( ! this.registry ) {
 			return undefined;
 		}
