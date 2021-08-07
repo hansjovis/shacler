@@ -2,8 +2,9 @@ import { Graph } from "./model/Graph";
 import ValidationReport from "./model/ValidationReport/ValidationReport";
 import { IShapeGraph, ShapeGraph } from "./model/Shapes/ShapeGraph";
 import ValidationResult from "./model/ValidationReport/ValidationResult";
-import { PropertyShape } from "./model/Shapes/PropertyShape";
 import ConstraintRegistry from "./model/ConstraintComponents/ConstraintRegistry";
+
+import { flatten } from "lodash";
 
 /**
  * Used to validate a linked data graph using a SHACL shape graph.
@@ -44,27 +45,22 @@ export default class Validator {
 	 */
 	public validate( data: Graph ): ValidationReport {
 		const graph = data[ "@graph" ];
-		const nodeShapes = this.shapes.graph;
 
-		const results: ValidationResult[] = [];
-
-		graph.forEach( node => {
-			nodeShapes.forEach( nodeShape => {
-				if ( nodeShape.isApplicable( node ) ) {
-					const nodeResults: ValidationResult[] = [];
-					nodeShape.property.forEach(
-						( propertyShape: PropertyShape ) => {
-							nodeResults.push( ... propertyShape.check( node, this.availableConstraints ) );
-						}
-					);
-					results.push( ...nodeResults );
-				}
-			} );
-		} );
+		const results = graph.map( node => this.checkNode( node ) );
 
 		return {
 			conforms: results.length === 0,
-			result: results,
+			result: flatten( results ),
 		};
+	}
+
+	public checkNode( node: any ): ValidationResult[] {
+		const nodeShapes = this.shapes.graph;
+
+		const results = nodeShapes
+			.filter( shape => shape.isApplicable( node ) )
+			.map( shape => shape.check( node, this.availableConstraints ) );
+
+		return flatten( results );
 	}
 }
