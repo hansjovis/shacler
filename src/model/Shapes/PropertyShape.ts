@@ -25,26 +25,9 @@ export class PropertyShape {
 	}
 
 	public check( node: any, availableConstraints: ConstraintRegistry ): ValidationResult[] {
-		const results: ValidationResult[] = [];
-		Object.keys( this.constraints ).forEach(
-			key => {
-				const result = this.checkConstraint( key, node, availableConstraints );
-				if ( result ) {
-					results.push( result );
-				}
-			}
-		);
-		return results;
-	}
-
-	private checkConstraint( key: string, node: any, availableConstraints: ConstraintRegistry ) {
-		const constraint = availableConstraints.get( key );
-
-		if ( constraint && ! constraint.isValid( node, this.shape )  ) {
-			return this.generateResult( node, constraint );
-		}
-
-		return null;
+		return availableConstraints.getApplicableConstraints( this )
+			.filter( constraint => ! constraint.isValid( node, this.shape ) )
+			.map( constraint => this.generateResult( node, constraint ) );
 	}
 
 	private generateResult( node: any, constraint: ConstraintComponent ): ValidationResult {

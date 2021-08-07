@@ -1,23 +1,25 @@
 import ConstraintComponent from "./ConstraintComponent";
+import { PropertyShape } from "../Shapes/PropertyShape";
 
 export default class ConstraintRegistry {
-	private registry: Record<string, ConstraintComponent>;
+	private readonly registry: Record<string, ConstraintComponent>;
 
 	constructor() {
 		this.registry = {};
+		this.get = this.get.bind( this );
 	}
 
 	register( parameter: string, constraintComponent: ConstraintComponent ) {
-		if ( ! this.registry ) {
-			this.registry = {};
-		}
 		this.registry[ parameter ] = constraintComponent;
 	}
 
 	get( parameter: string ): ConstraintComponent | undefined {
-		if ( ! this.registry ) {
-			return undefined;
-		}
 		return this.registry[ parameter ];
+	}
+
+	getApplicableConstraints( propertyShape: PropertyShape ): ConstraintComponent[] {
+		return Object.keys( propertyShape.constraints )
+			.map( this.get )
+			.filter( x => x ) as ConstraintComponent[];
 	}
 }
