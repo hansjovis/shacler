@@ -1,4 +1,5 @@
 import { Graph } from "./model/Graph";
+import { Node } from "./model/Node";
 import ValidationReport from "./model/ValidationReport/ValidationReport";
 import { IShapeGraph, ShapeGraph } from "./model/Shapes/ShapeGraph";
 import ValidationResult from "./model/ValidationReport/ValidationResult";
@@ -46,7 +47,7 @@ export default class Validator {
 	public validate( data: Graph ): ValidationReport {
 		const graph = data[ "@graph" ];
 
-		const results = flatMap( graph, ( node: any ) => this.checkNode( node ) );
+		const results = flatMap( graph, ( node: Node ) => this.checkNode( node ) );
 
 		return {
 			conforms: results.length === 0,
@@ -54,7 +55,7 @@ export default class Validator {
 		};
 	}
 
-	public checkNode( node: any ): ValidationResult[] {
+	public checkNode( node: Node ): ValidationResult[] {
 		const nodeShapes = this.shapes.graph;
 
 		const applicableNodeShapes = nodeShapes.filter( shape => shape.isApplicable( node ) );

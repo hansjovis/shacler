@@ -9,7 +9,7 @@ export default class ConstraintRegistry {
 		this.get = this.get.bind( this );
 	}
 
-	register( parameter: string, constraintComponent: ConstraintComponent ) {
+	register( parameter: string, constraintComponent: ConstraintComponent ): void {
 		this.registry[ parameter ] = constraintComponent;
 	}
 

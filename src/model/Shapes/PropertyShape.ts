@@ -1,6 +1,7 @@
 import ValidationResult from "../ValidationReport/ValidationResult";
 import ConstraintRegistry from "../ConstraintComponents/ConstraintRegistry";
 import ConstraintComponent from "../ConstraintComponents/ConstraintComponent";
+import { Node } from "../Node";
 
 export interface IPropertyShape {
 	path: string;
@@ -12,7 +13,7 @@ export interface IPropertyShape {
 export class PropertyShape {
 	shape: IPropertyShape;
 
-	constraints: Record<string, any>;
+	constraints: Record<string, unknown>;
 
 	constructor( shape: IPropertyShape ) {
 		this.shape = shape;
@@ -24,13 +25,13 @@ export class PropertyShape {
 		delete this.constraints.severity;
 	}
 
-	public check( node: any, availableConstraints: ConstraintRegistry ): ValidationResult[] {
+	public check( node: Node, availableConstraints: ConstraintRegistry ): ValidationResult[] {
 		return availableConstraints.getApplicableConstraints( this )
 			.filter( constraint => ! constraint.isValid( node, this.shape ) )
 			.map( constraint => this.generateResult( node, constraint ) );
 	}
 
-	private generateResult( node: any, constraint: ConstraintComponent ): ValidationResult {
+	private generateResult( node: Node, constraint: ConstraintComponent ): ValidationResult {
 		return {
 			focusNode: node,
 
