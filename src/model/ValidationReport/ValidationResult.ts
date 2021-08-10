@@ -8,4 +8,4 @@ export default interface ValidationResult {
 	resultPath?: string;
 	resultMessage: string;
 	resultSeverity: string;
-};
+}
