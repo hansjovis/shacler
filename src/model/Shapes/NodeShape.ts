@@ -72,7 +72,7 @@ export class NodeShape {
 	 *
 	 * @return A list of validation results if any constraints are violated, or an empty list if no constraints are violated.
 	 */
-	public check( node: Node, availableConstraints: ConstraintRegistry ): ValidationResult[] {
-		return flatMap( this.property, shape => shape.check( node, availableConstraints ) );
+	public validate( node: Node, availableConstraints: ConstraintRegistry ): ValidationResult[] {
+		return flatMap( this.property, shape => shape.validate( node, availableConstraints ) );
 	}
 }

@@ -47,7 +47,7 @@ export default class Validator {
 	public validate( data: Graph ): ValidationReport {
 		const graph = data[ "@graph" ];
 
-		const results = flatMap( graph, ( node: Node ) => this.checkNode( node ) );
+		const results = flatMap( graph, ( node: Node ) => this.validateNode( node ) );
 
 		return {
 			conforms: results.length === 0,
@@ -55,14 +55,14 @@ export default class Validator {
 		};
 	}
 
-	public checkNode( node: Node ): ValidationResult[] {
+	public validateNode( node: Node ): ValidationResult[] {
 		const nodeShapes = this.shapes.graph;
 
 		const applicableNodeShapes = nodeShapes.filter( shape => shape.isApplicable( node ) );
 
 		return flatMap(
 			applicableNodeShapes,
-			shape => shape.check( node, this.availableConstraints )
+			shape => shape.validate( node, this.availableConstraints )
 		);
 	}
 }
