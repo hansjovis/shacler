@@ -55,7 +55,14 @@ export default class Validator {
 		};
 	}
 
-	public validateNode( node: Node ): ValidationResult[] {
+	/**
+	 * Validates the given node according to this validator's node shapes.
+	 *
+	 * @param node The node to check.
+	 *
+	 * @return A list of validation results if any constraints are violated, or an empty list if no constraints are violated.
+	 */
+	private validateNode( node: Node ): ValidationResult[] {
 		const nodeShapes = this.shapes.graph;
 
 		const applicableNodeShapes = nodeShapes.filter( shape => shape.isApplicable( node ) );
