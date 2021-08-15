@@ -25,7 +25,7 @@ export class PropertyShape {
 		delete this.constraints.severity;
 	}
 
-	public check( node: Node, availableConstraints: ConstraintRegistry ): ValidationResult[] {
+	public validate( node: Node, availableConstraints: ConstraintRegistry ): ValidationResult[] {
 		return availableConstraints.getApplicableConstraints( this )
 			.filter( constraint => ! constraint.isValid( node, this.shape ) )
 			.map( constraint => this.generateResult( node, constraint ) );

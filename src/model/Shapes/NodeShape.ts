@@ -22,7 +22,7 @@ export class NodeShape {
 		return node["@type"] === this.targetClass;
 	}
 
-	public check( node: Node, availableConstraints: ConstraintRegistry ): ValidationResult[] {
-		return flatMap( this.property, shape => shape.check( node, availableConstraints ) );
+	public validate( node: Node, availableConstraints: ConstraintRegistry ): ValidationResult[] {
+		return flatMap( this.property, shape => shape.validate( node, availableConstraints ) );
 	}
 }
